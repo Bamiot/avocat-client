@@ -5,6 +5,7 @@ import './styles/app.scss'
 
 // components
 import CreateRoom from './components/CreateRoom'
+import JoinRoom from './components/JoinRoom'
 
 export default class App extends React.Component {
   state = {}
@@ -16,6 +17,7 @@ export default class App extends React.Component {
     return (
       <div className="App">
         <CreateRoom />
+        <JoinRoom />
       </div>
     )
   }
