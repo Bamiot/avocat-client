@@ -1,0 +1,62 @@
+@import './sass-utils/variables.scss';
+@import './sass-utils/mixins.scss';
+@import './components/spinner.scss';
+@import './components/annimations.scss';
+
+.joinCreateRoom-container {
+  margin: 2rem;
+  padding: 2rem;
+  border-radius: 2rem;
+  box-shadow: 0 0 1rem rgba(0, 0, 0, 0.2);
+  width: 11rem;
+  height: 13rem;
+  overflow: hidden;
+  & > * {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    height: 100%;
+    width: 100%;
+  }
+  span {
+    font-size: 1.5rem;
+    font-weight: bold;
+  }
+  button {
+    @include button-primary;
+  }
+}
+
+.joinCreateRoom {
+  .checkbox-private {
+    position: relative;
+    label {
+      font-size: 1.2rem;
+      font-weight: bold;
+    }
+    input[type='checkbox'] {
+      margin-right: 0.5rem;
+    }
+    // annimation for checkbox
+    input[type='checkbox'],
+    label {
+      position: relative;
+      top: 0.5rem;
+      transition: all 0.3s ease-in-out;
+    }
+    input[type='checkbox']:checked,
+    input[type='checkbox']:checked + label {
+      top: 0rem;
+    }
+  }
+}
+
+.choiceName {
+  span {
+    margin-bottom: 2rem;
+  }
+  input {
+    margin-bottom: auto;
+  }
+}

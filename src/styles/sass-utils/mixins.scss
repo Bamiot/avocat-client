@@ -1,0 +1,28 @@
+@mixin input-text {
+  position: relative;
+  background: none;
+  border: none;
+  border-bottom: 1px solid #aaa;
+  color: $white;
+  transition: all 0.2s ease-in-out;
+  &:focus-visible {
+    outline: none;
+    border-color: #fff;
+  }
+}
+
+@mixin button-primary {
+  background: $primary-color;
+  color: #fff;
+  border: none;
+  border-radius: 2rem;
+  padding: 1rem 2rem;
+  font-size: 1.2rem;
+  font-weight: bold;
+  text-shadow: 0 0 1rem rgba(0, 0, 0, 0.6);
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  &:hover {
+    filter: brightness(1.1);
+  }
+}

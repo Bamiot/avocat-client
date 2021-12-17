@@ -1,7 +1,38 @@
+// import
+@import './sass-utils/variables.scss';
+@import './sass-utils/mixins.scss';
+
+// normalize
+body,
+html {
+  margin: 0;
+  padding: 0;
+}
+
+// bug avec une iframe chelou
+iframe {
+  height: 0;
+  width: 0;
+  visibility: hidden;
+  z-index: -1;
+  position: fixed;
+}
+
+// global styles
+
+input[type='text'] {
+  @include input-text;
+}
+
+// App styles
 .App {
-  font-family: sans-serif;
+  font-family: 'Roboto', sans-serif;
+  color: #eee;
   margin: 0%;
-  background: #2f2e33;
+  background: $gray;
   height: 100vh;
   width: 100vw;
+  position: absolute;
+  top: 0;
+  left: 0;
 }
