@@ -19,7 +19,7 @@ iframe {
 }
 
 // global styles
-
+input[type='password'],
 input[type='text'] {
   @include input-text;
 }

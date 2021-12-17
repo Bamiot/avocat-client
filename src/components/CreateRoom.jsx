@@ -2,11 +2,20 @@ import react from 'react'
 import axios from 'axios'
 import '../styles/joinCreateRoom.scss'
 
+const inOutStyleData = {
+  duration: 500
+}
+
+const inOutStyle = {
+  animationDuration: `${inOutStyleData.duration}ms`
+}
+
 export default class CreateRoom extends react.Component {
   state = {
     roomName: '',
     userName: '',
     privateRoom: false,
+    password: '',
     roomScreen: true,
     nameScreen: false,
     outFlag: false,
@@ -17,43 +26,34 @@ export default class CreateRoom extends react.Component {
     this.setState({ roomScreen: true, outFlag: true })
     setTimeout(() => {
       this.setState({ roomScreen: false, outFlag: false })
-    }, 500)
+      this.inNameScreen()
+    }, inOutStyleData.duration)
   }
 
   inNameScreen = () => {
     this.setState({ nameScreen: true, inFlag: true })
     setTimeout(() => {
       this.setState({ nameScreen: true, inFlag: false })
-    }, 500)
+    }, inOutStyleData.duration)
+  }
+
+  outNameScreen = () => {
+    this.setState({ nameScreen: true, outFlag: true })
+    setTimeout(() => {
+      this.setState({ nameScreen: false, outFlag: false })
+    }, inOutStyleData.duration)
   }
 
   handleSubmit = () => {
-    const { roomName, privateRoom, password, outFlag } = this.state
+    const { roomName, password, userName, privateRoom } = this.state
     if (
       roomName.length > 0 &&
       (!privateRoom || (privateRoom && password && password.length > 0))
     ) {
-      this.outRoomScreen()
-      setTimeout(this.inNameScreen, 3000)
+      this.outNameScreen()
       axios
         .get(
-          `/rooms/create?id_room=${roomName}${privateRoom ? `&password=${password}` : ''}`
-        )
-        .then((res) => {
-          this.inNameScreen()
-          console.log(res)
-        })
-        .catch((err) => console.log(err))
-    }
-  }
-
-  handleJoin = () => {
-    const { roomName, password, userName, privateRoom } = this.state
-    if (roomName.length > 0) {
-      this.setState({ roomScreen: false, nameScreen: false })
-      axios
-        .get(
-          `/rooms/join?id_room=${roomName}&username=${userName}${
+          `/rooms/create?room_id=${roomName}&username=${userName}${
             privateRoom ? `&password=${password}` : ''
           }`
         )
@@ -69,6 +69,13 @@ export default class CreateRoom extends react.Component {
     return alphaTest.test(value)
   }
 
+  shakeError = (event) => {
+    event.target.classList.add('error-shake')
+    setTimeout(() => {
+      event.target.classList.remove('error-shake')
+    }, 250)
+  }
+
   render() {
     const {
       roomName,
@@ -78,7 +85,8 @@ export default class CreateRoom extends react.Component {
       nameScreen,
       userName,
       outFlag,
-      inFlag
+      inFlag,
+      showPassword
     } = this.state
     return (
       <div className="joinCreateRoom-container">
@@ -86,15 +94,20 @@ export default class CreateRoom extends react.Component {
           <div className="loading-spinner" />
         )}
         {roomScreen && !nameScreen ? (
-          <div className={`joinCreateRoom ${outFlag ? 'left-out' : ''}`}>
+          <form
+            className={`joinCreateRoom${outFlag ? ' left-out' : ''}`}
+            style={inOutStyle}
+          >
             <span>Create Room</span>
             <input
               type="text"
               placeholder="Room Name"
               value={roomName}
               onChange={(e) => {
+                e.preventDefault()
                 if (this.verifyInput(e.target.value))
                   this.setState({ roomName: e.target.value })
+                else this.shakeError(e)
               }}
             />
             <div className="checkbox-private">
@@ -108,33 +121,69 @@ export default class CreateRoom extends react.Component {
               />
               <label htmlFor="privateRoom">private</label>
             </div>
-            <input
-              type="text"
-              placeholder="Password"
+            <div
+              className="password-input"
               style={privateRoom ? { visibility: 'visible' } : { visibility: 'hidden' }}
-              value={password}
-              onChange={(e) => {
-                if (this.verifyInput(e.target.value))
-                  this.setState({ password: e.target.value })
+            >
+              <input
+                type={showPassword ? 'text' : 'password'}
+                placeholder="Password"
+                value={password}
+                onChange={(e) => {
+                  e.preventDefault()
+                  if (this.verifyInput(e.target.value))
+                    this.setState({ password: e.target.value })
+                  else this.shakeError(e)
+                }}
+              />
+              <i
+                class={`fas fa-eye${showPassword ? '-slash' : ''}`}
+                onClick={(e) => {
+                  this.setState({ showPassword: !showPassword })
+                }}
+              ></i>
+            </div>
+            <button
+              onClick={(e) => {
+                e.preventDefault()
+                if (
+                  roomName.length > 0 &&
+                  (!privateRoom || (privateRoom && password && password.length > 0))
+                )
+                  this.outRoomScreen()
               }}
-            />
-            <button onClick={this.handleSubmit}>Create</button>
-          </div>
+            >
+              Ok
+            </button>
+          </form>
         ) : null}
         {nameScreen && !roomScreen ? (
-          <div className={`choiceName ${inFlag ? 'right-in' : ''}`}>
+          <form
+            className={`choiceName${inFlag ? ' right-in' : ''}${
+              outFlag ? ' left-out' : ''
+            }`}
+            style={inOutStyle}
+          >
             <span>Choose a name</span>
             <input
               type="text"
               placeholder="Name"
+              autoFocus
               value={userName}
               onChange={(e) => {
                 if (this.verifyInput(e.target.value))
                   this.setState({ userName: e.target.value })
               }}
             />
-            <button>Ok</button>
-          </div>
+            <button
+              onClick={(e) => {
+                e.preventDefault()
+                if (userName.length > 0) this.handleSubmit()
+              }}
+            >
+              Create
+            </button>
+          </form>
         ) : null}
       </div>
     )

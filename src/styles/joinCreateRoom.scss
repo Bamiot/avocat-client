@@ -8,7 +8,7 @@
   padding: 2rem;
   border-radius: 2rem;
   box-shadow: 0 0 1rem rgba(0, 0, 0, 0.2);
-  width: 11rem;
+  width: 12rem;
   height: 13rem;
   overflow: hidden;
   & > * {
@@ -29,6 +29,7 @@
 }
 
 .joinCreateRoom {
+  position: relative;
   .checkbox-private {
     position: relative;
     label {
@@ -50,9 +51,23 @@
       top: 0rem;
     }
   }
+  .password-input {
+    position: relative;
+    i {
+      transition: all 0.2s ease-in-out;
+      position: absolute;
+      right: 0;
+      z-index: 1;
+      &:hover {
+        cursor: pointer;
+        color: $primary-color;
+      }
+    }
+  }
 }
 
 .choiceName {
+  position: relative;
   span {
     margin-bottom: 2rem;
   }
