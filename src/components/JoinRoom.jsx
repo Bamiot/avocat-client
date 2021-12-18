@@ -56,7 +56,7 @@ export default class CreateRoom extends react.Component {
         .then((res) => {
           console.log(res)
         })
-        .catch((err) => console.log(err))
+        .catch((err) => console.error(err))
     }
   }
 

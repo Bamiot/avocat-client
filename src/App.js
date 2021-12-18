@@ -6,6 +6,7 @@ import './styles/app.scss'
 // components
 import CreateRoom from './components/CreateRoom'
 import JoinRoom from './components/JoinRoom'
+import PublicRoomList from './components/PublicRoomList'
 
 export default class App extends React.Component {
   state = {}
@@ -16,8 +17,11 @@ export default class App extends React.Component {
     // const {} = this.state
     return (
       <div className="App">
-        <CreateRoom />
-        <JoinRoom />
+        <PublicRoomList />
+        <div className="room-container">
+          <CreateRoom />
+          <JoinRoom />
+        </div>
       </div>
     )
   }

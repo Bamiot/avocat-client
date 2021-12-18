@@ -1,3 +1,4 @@
+// out
 .left-out {
   animation-name: left-out;
   animation-timing-function: ease-in;
@@ -16,6 +17,7 @@
   }
 }
 
+//in
 .right-in {
   animation-name: right-in;
   animation-timing-function: ease-in-out;
@@ -34,6 +36,25 @@
   }
 }
 
+.down-in {
+  animation-name: down-in;
+  animation-timing-function: ease-in-out;
+  animation-duration: 0.5s;
+  animation-fill-mode: both;
+  animation-iteration-count: 1;
+}
+@keyframes down-in {
+  from {
+    opacity: 0;
+    transform: translateY(120%);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// error
 .error-shake {
   animation-name: shake;
   animation-timing-function: ease-in-out;
