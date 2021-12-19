@@ -29,11 +29,13 @@
     }
   }
 }
-
+.scroll-view-wrapper {
+  height: calc(100% - 3rem);
+}
 .scroll-view {
   overflow-y: scroll;
   overflow-x: hidden;
-  height: calc(100% - 7rem);
+  height: calc(100% - 4rem);
   width: 100%;
   position: relative;
   &::-webkit-scrollbar-track {
@@ -122,5 +124,45 @@
     &:nth-of-type(#{$i}) {
       animation-delay: #{$i * 0.2}s;
     }
+  }
+}
+
+.name-screen {
+  position: relative;
+  margin-top: 4rem;
+  padding: 2rem;
+  .return-btn {
+    position: absolute;
+    top: -2rem;
+    left: 1rem;
+    font-size: 1.5rem;
+    color: $white;
+    &:hover {
+      color: $primary-color;
+    }
+  }
+  &.right-out {
+    .return-btn {
+      animation: return-out 0.2s ease-in-out both;
+    }
+    @keyframes return-out {
+      to {
+        transform: translateX(-500%);
+        opacity: 0;
+      }
+    }
+  }
+  span {
+    font-size: 1.5rem;
+  }
+  input {
+    height: 2rem;
+    font-size: 1rem;
+    margin: 1rem 0;
+  }
+  button {
+    @include button-primary;
+    margin-top: 1rem;
+    width: 100%;
   }
 }

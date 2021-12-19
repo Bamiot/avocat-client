@@ -15,6 +15,22 @@
   }
 }
 
+.right-out {
+  animation-name: right-out;
+  animation-timing-function: ease-in;
+  animation-duration: 0.5s;
+  animation-fill-mode: both;
+  animation-iteration-count: 1;
+  opacity: 1;
+  transform: translateX(0);
+}
+@keyframes right-out {
+  to {
+    opacity: 0;
+    transform: translateX(120%);
+  }
+}
+
 //in
 .right-in {
   animation-name: right-in;
@@ -26,6 +42,22 @@
   transform: translateX(120%);
 }
 @keyframes right-in {
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.left-in {
+  animation-name: left-in;
+  animation-timing-function: ease-in-out;
+  animation-duration: 0.5s;
+  animation-fill-mode: both;
+  animation-iteration-count: 1;
+  opacity: 0;
+  transform: translateX(-120%);
+}
+@keyframes left-in {
   to {
     opacity: 1;
     transform: translateX(0);

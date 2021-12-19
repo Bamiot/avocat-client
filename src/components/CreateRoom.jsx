@@ -15,7 +15,7 @@ export default class CreateRoom extends react.Component {
     super(props)
     this.state = {
       roomName: '',
-      userName: '',
+      username: '',
       privateRoom: false,
       password: '',
       roomScreen: true,
@@ -63,7 +63,7 @@ export default class CreateRoom extends react.Component {
   }
 
   handleSubmit = () => {
-    const { roomName, password, userName, privateRoom } = this.state
+    const { roomName, password, username: userName, privateRoom, maxPlayers } = this.state
     if (
       roomName.length > 0 &&
       (!privateRoom || (privateRoom && password && password.length > 0))
@@ -71,7 +71,7 @@ export default class CreateRoom extends react.Component {
       this.outNameScreen()
       axios
         .get(
-          `/rooms/create?room_id=${roomName}&username=${userName}${
+          `/rooms/create?room_id=${roomName}&maxplayers=${maxPlayers}&username=${userName}${
             privateRoom ? `&password=${password}` : ''
           }`
         )
@@ -79,7 +79,7 @@ export default class CreateRoom extends react.Component {
           console.log(res)
         })
         .catch((err) => console.error(err))
-    }
+    } else console.error('create room handle sumbit error')
   }
 
   verifyName = (value) => {
@@ -124,7 +124,7 @@ export default class CreateRoom extends react.Component {
       password,
       roomScreen,
       nameScreen,
-      userName,
+      username,
       outFlag,
       inFlag,
       hideFlag,
@@ -251,19 +251,20 @@ export default class CreateRoom extends react.Component {
               type="text"
               placeholder="Name"
               autoFocus
-              value={userName}
+              value={username}
               ref={this.userNameRef}
               onChange={(e) => {
                 if (this.verifyName(e.target.value))
-                  this.setState({ userName: e.target.value })
+                  this.setState({ username: e.target.value })
+                else this.shakeError(e.target)
               }}
             />
             <button
               onClick={(e) => {
                 e.preventDefault()
-                if (!this.verifyName(userName) || userName.length < 2)
+                if (!this.verifyName(username) || username.length < 2)
                   this.allError(this.userNameRef.current)
-                else this.outNameScreen()
+                else this.handleSubmit()
               }}
             >
               Create
