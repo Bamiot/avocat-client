@@ -100,7 +100,7 @@ export default class CreateRoom extends react.Component {
       showPassword
     } = this.state
     return (
-      <div className="joinCreateRoom-container">
+      <div className="joinCreateRoom-container createRoom">
         {(roomScreen && !nameScreen) || (nameScreen && !roomScreen) ? null : (
           <div className="loading-spinner" />
         )}

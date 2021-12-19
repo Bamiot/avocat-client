@@ -17,39 +17,14 @@ export default class CreateRoom extends react.Component {
     password: '',
     roomScreen: true,
     nameScreen: false,
-    outFlag: false,
-    inFlag: false,
-    hideFlag: false
+    outFlag: false
   }
 
   outRoomScreen = () => {
     this.setState({ roomScreen: true, outFlag: true })
     setTimeout(() => {
       this.setState({ roomScreen: false, outFlag: false })
-      this.inNameScreen()
-    }, inOutStyleData.duration)
-  }
-
-  inNameScreen = () => {
-    this.setState({ nameScreen: true, inFlag: false, hideFlag: true })
-    /*
-      il y a un bug si commence l'annimation au moment ou l'element apparait
-      donc 1ms de delay pour appliqué l'animation pour forcer le fait de la faire 
-      en 2 render (1 pour l'apparition et 1 pour l'animation),
-      comme on ne veux pas le voir sans le translate on le cache avec .hide
-    */
-    setTimeout(() => {
-      this.setState({ inFlag: true, hideFlag: false })
-    }, 1)
-    setTimeout(() => {
-      this.setState({ nameScreen: true, inFlag: false })
-    }, inOutStyleData.duration + 1)
-  }
-
-  outNameScreen = () => {
-    this.setState({ nameScreen: true, outFlag: true })
-    setTimeout(() => {
-      this.setState({ nameScreen: false, outFlag: false })
+      this.handleSubmit()
     }, inOutStyleData.duration)
   }
 
@@ -90,7 +65,6 @@ export default class CreateRoom extends react.Component {
       nameScreen,
       userName,
       outFlag,
-      inFlag,
       showPassword,
       hideFlag
     } = this.state
@@ -135,38 +109,20 @@ export default class CreateRoom extends react.Component {
                 }}
               ></i>
             </div>
-            <button
-              onClick={(e) => {
-                e.preventDefault()
-                if (roomName.length > 0) this.outRoomScreen()
-              }}
-            >
-              Ok
-            </button>
-          </form>
-        ) : null}
-        {nameScreen && !roomScreen ? (
-          <form
-            className={`choiceName${inFlag ? ' right-in' : ''}${
-              outFlag ? ' left-out' : ''
-            }${hideFlag ? ' hide' : ''}`}
-            style={inOutStyle}
-          >
-            <span>Choose a name</span>
             <input
               type="text"
               placeholder="Name"
-              autoFocus
               value={userName}
               onChange={(e) => {
                 if (this.verifyInput(e.target.value))
                   this.setState({ userName: e.target.value })
+                else this.shakeError(e)
               }}
             />
             <button
               onClick={(e) => {
                 e.preventDefault()
-                if (userName.length > 0) this.handleSubmit()
+                if (roomName.length > 0 && userName.length > 0) this.outRoomScreen()
               }}
             >
               Join
