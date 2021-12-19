@@ -80,7 +80,6 @@ export default class CreateRoom extends react.Component {
   allError = (target) => {
     this.shakeError(target)
     this.redError(target)
-    console.log('error', target)
   }
 
   render() {
