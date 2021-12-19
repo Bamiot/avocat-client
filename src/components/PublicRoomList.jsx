@@ -96,8 +96,9 @@ export default class publicRoomList extends react.Component {
   }
 
   componentDidMount() {
-    const intervalHandle = setInterval(this.getRoomsList, 1000)
+    const intervalHandle = setInterval(this.getRoomsList, 10 * 1000)
     this.setState({ intervalHandle })
+    this.getRoomsList()
   }
 
   componentWillUnmount() {
@@ -136,12 +137,22 @@ export default class publicRoomList extends react.Component {
     const { rooms } = this.state
     return (
       <div className="publicroom-container">
-        <span>Quick Join</span>
+        <span>
+          Quick Join
+          <i
+            className="fas fa-sync-alt"
+            onClick={(e) => {
+              e.preventDefault()
+              this.setState({ rooms: [] })
+              setTimeout(this.getRoomsList, 1000)
+            }}
+          />
+        </span>
         <div className="publicroom-header">
           <p>Room name</p>
           <p>Players</p>
         </div>
-        {Array.isArray(rooms) ? (
+        {Array.isArray(rooms) && rooms.length > 0 ? (
           <div className="scroll-view">
             {rooms.map((room, key) => (
               <div className="publicroom-card down-in" key={key}>
@@ -150,7 +161,7 @@ export default class publicRoomList extends react.Component {
                   {room.players.length}/{room.maxPlayers}
                 </p>
                 <i
-                  class={`fas fa-arrow-circle-right ${
+                  className={`fas fa-arrow-circle-right ${
                     room.players.length < room.maxPlayers ? 'text-green' : 'text-red'
                   }`}
                 ></i>

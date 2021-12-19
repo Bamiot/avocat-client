@@ -148,7 +148,7 @@ export default class CreateRoom extends react.Component {
                 }}
               />
               <i
-                class={`fas fa-eye${showPassword ? '-slash' : ''}`}
+                className={`fas fa-eye${showPassword ? '-slash' : ''}`}
                 onClick={(e) => {
                   this.setState({ showPassword: !showPassword })
                 }}

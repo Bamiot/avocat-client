@@ -16,6 +16,17 @@
     font-size: 2rem;
     font-weight: bold;
     color: $primary-color;
+    i {
+      position: absolute;
+      cursor: pointer;
+      top: 2.5rem;
+      right: 2.5rem;
+      font-size: 1.5rem;
+      color: $white;
+      &:hover {
+        color: $primary-color;
+      }
+    }
   }
 }
 
@@ -109,7 +120,7 @@
 .down-in {
   @for $i from 1 through 20 {
     &:nth-of-type(#{$i}) {
-      animation-delay: #{$i * 0.1}s;
+      animation-delay: #{$i * 0.2}s;
     }
   }
 }
