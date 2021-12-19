@@ -9,18 +9,22 @@ import JoinRoom from './components/JoinRoom'
 import PublicRoomList from './components/PublicRoomList'
 
 export default class App extends React.Component {
-  state = {}
+  state = { inFlag: false, outFlag: false }
 
   componentDidMount = () => {}
 
   render = () => {
-    // const {} = this.state
+    const { inFlag, outFlag } = this.state
     return (
       <div className="App">
-        <PublicRoomList />
-        <div className="room-container">
-          <CreateRoom />
-          <JoinRoom />
+        <div
+          className={`room-page ${inFlag ? 'left-in' : ''}${outFlag ? 'right-out' : ''}`}
+        >
+          <PublicRoomList />
+          <div className="room-container">
+            <CreateRoom />
+            <JoinRoom />
+          </div>
         </div>
       </div>
     )

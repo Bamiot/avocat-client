@@ -52,7 +52,7 @@ export default class CreateRoom extends react.Component {
   }
 
   verifyInput = (value) => {
-    const alphaTest = new RegExp('^[a-zA-Z0-9_ ]*$')
+    const alphaTest = new RegExp('^[a-zA-Z0-9_]*$')
     if (
       alphaTest.test(value) &&
       value[0] !== ' ' &&

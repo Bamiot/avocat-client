@@ -11,6 +11,28 @@ body {
   margin: 0;
 }
 
+// scroll bar
+* {
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  scrollbar-width: 0.1rem; /*doesn't work*/
+  scrollbar-color: darkgray rgba(0, 0, 0, 0.3); /*doesn't work*/
+}
+*::-webkit-scrollbar {
+  width: 0.1rem;
+}
+*::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+}
+*::-webkit-scrollbar-thumb {
+  background-color: darkgrey;
+  outline: 1px solid slategrey;
+  border-radius: 0.5%;
+}
+
 input {
   background: none;
   border: none;
@@ -19,5 +41,22 @@ input {
   }
   &::-webkit-inner-spin-button {
     -webkit-appearance: none;
+  }
+  &[type='number'],
+  &[type='password'],
+  &[type='text'] {
+    position: relative;
+    border-bottom: 1px solid #aaa;
+    color: $white;
+    transition: all 0.2s ease-in-out;
+    &:focus-visible {
+      border-color: #fff;
+    }
+  }
+  &[type='number'] {
+    width: 2.5rem;
+    height: 2rem;
+    text-align: center;
+    font-size: 1rem;
   }
 }
