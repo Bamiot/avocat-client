@@ -11,13 +11,19 @@ const inOutStyle = {
 }
 
 export default class CreateRoom extends react.Component {
-  state = {
-    roomName: '',
-    userName: '',
-    password: '',
-    roomScreen: true,
-    nameScreen: false,
-    outFlag: false
+  constructor(props) {
+    super(props)
+    this.state = {
+      roomName: '',
+      userName: '',
+      password: '',
+      roomScreen: true,
+      nameScreen: false,
+      outFlag: false
+    }
+    this.roomNameRef = react.createRef()
+    this.userNameRef = react.createRef()
+    this.passwordRef = react.createRef()
   }
 
   outRoomScreen = () => {
@@ -46,34 +52,43 @@ export default class CreateRoom extends react.Component {
   }
 
   verifyInput = (value) => {
-    const alphaTest = new RegExp('^[a-zA-Z0-9_]*$')
-    return alphaTest.test(value)
+    const alphaTest = new RegExp('^[a-zA-Z0-9_ ]*$')
+    if (
+      alphaTest.test(value) &&
+      value[0] !== ' ' &&
+      value[value.length - 1] !== ' ' &&
+      value.length < 30
+    )
+      return true
+    else return false
   }
 
-  shakeError = (event) => {
-    event.target.classList.add('error-shake')
+  shakeError = (target) => {
+    target.classList.add('error-shake')
     setTimeout(() => {
-      event.target.classList.remove('error-shake')
+      target.classList.remove('error-shake')
     }, 250)
   }
 
+  redError = (target) => {
+    target.classList.add('red-error')
+    setTimeout(() => {
+      target.classList.remove('red-error')
+    }, 250)
+  }
+
+  allError = (target) => {
+    this.shakeError(target)
+    this.redError(target)
+    console.log('error', target)
+  }
+
   render() {
-    const {
-      roomName,
-      password,
-      roomScreen,
-      nameScreen,
-      userName,
-      outFlag,
-      showPassword,
-      hideFlag
-    } = this.state
+    const { roomName, password, roomScreen, userName, outFlag, showPassword } = this.state
     return (
       <div className="joinCreateRoom-container">
-        {(roomScreen && !nameScreen) || (nameScreen && !roomScreen) ? null : (
-          <div className="loading-spinner" />
-        )}
-        {roomScreen && !nameScreen ? (
+        {roomScreen ? null : <div className="loading-spinner" />}
+        {roomScreen ? (
           <form
             className={`joinCreateRoom${outFlag ? ' left-out' : ''}`}
             style={inOutStyle}
@@ -83,11 +98,12 @@ export default class CreateRoom extends react.Component {
               type="text"
               placeholder="Room Name"
               value={roomName}
+              ref={this.roomNameRef}
               onChange={(e) => {
                 e.preventDefault()
                 if (this.verifyInput(e.target.value))
                   this.setState({ roomName: e.target.value })
-                else this.shakeError(e)
+                else this.shakeError(e.target)
               }}
             />
             <div className="password-input">
@@ -95,11 +111,12 @@ export default class CreateRoom extends react.Component {
                 type={showPassword ? 'text' : 'password'}
                 placeholder="Password"
                 value={password}
+                ref={this.passwordRef}
                 onChange={(e) => {
                   e.preventDefault()
                   if (this.verifyInput(e.target.value))
                     this.setState({ password: e.target.value })
-                  else this.shakeError(e)
+                  else this.shakeError(e.target)
                 }}
               />
               <i
@@ -112,17 +129,24 @@ export default class CreateRoom extends react.Component {
             <input
               type="text"
               placeholder="Name"
+              ref={this.userNameRef}
               value={userName}
               onChange={(e) => {
                 if (this.verifyInput(e.target.value))
                   this.setState({ userName: e.target.value })
-                else this.shakeError(e)
+                else this.shakeError(e.target)
               }}
             />
             <button
               onClick={(e) => {
                 e.preventDefault()
-                if (roomName.length > 0 && userName.length > 0) this.outRoomScreen()
+                if (!this.verifyInput(roomName) || roomName.length < 2)
+                  this.allError(this.roomNameRef.current)
+                else if (!this.verifyInput(password))
+                  this.allError(this.passwordRef.current)
+                else if (!this.verifyInput(userName) || userName.length < 2)
+                  this.allError(this.userNameRef.current)
+                else this.outRoomScreen()
               }}
             >
               Join

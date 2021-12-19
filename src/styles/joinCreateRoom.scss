@@ -30,8 +30,29 @@
   }
 }
 
-.createRoom {
-  //
+.maxplayers-container {
+  position: relative;
+  .spin-btn-up,
+  .spin-btn-down {
+    position: absolute;
+    right: -0.5rem;
+    --spin-btn-position: calc(50% - 0.15rem);
+    width: 1rem;
+    height: 1rem;
+    border-radius: 50%;
+    color: $white;
+    transition: all 0.2s ease-in-out;
+    &:hover {
+      cursor: pointer;
+      color: $primary-color;
+    }
+  }
+  .spin-btn-up {
+    bottom: var(--spin-btn-position);
+  }
+  .spin-btn-down {
+    top: var(--spin-btn-position);
+  }
 }
 
 .joinCreateRoom,

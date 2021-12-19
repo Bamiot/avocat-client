@@ -49,6 +49,10 @@
 }
 
 // error
+.red-error {
+  color: $red !important;
+  border-color: $red !important;
+}
 .error-shake {
   animation-name: shake;
   animation-timing-function: ease-in-out;

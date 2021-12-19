@@ -11,16 +11,24 @@ const inOutStyle = {
 }
 
 export default class CreateRoom extends react.Component {
-  state = {
-    roomName: '',
-    userName: '',
-    privateRoom: false,
-    password: '',
-    roomScreen: true,
-    nameScreen: false,
-    outFlag: false,
-    inFlag: false,
-    hideFlag: false
+  constructor(props) {
+    super(props)
+    this.state = {
+      roomName: '',
+      userName: '',
+      privateRoom: false,
+      password: '',
+      roomScreen: true,
+      nameScreen: false,
+      outFlag: false,
+      inFlag: false,
+      hideFlag: false,
+      maxPlayers: 4
+    }
+    this.roomNameRef = react.createRef()
+    this.userNameRef = react.createRef()
+    this.passwordRef = react.createRef()
+    this.maxPlayersRef = react.createRef()
   }
 
   outRoomScreen = () => {
@@ -74,16 +82,39 @@ export default class CreateRoom extends react.Component {
     }
   }
 
-  verifyInput = (value) => {
-    const alphaTest = new RegExp('^[a-zA-Z0-9_]*$')
-    return alphaTest.test(value)
+  verifyName = (value) => {
+    const alphaTest = new RegExp('^[a-zA-Z0-9_ ]*$')
+    if (
+      alphaTest.test(value) &&
+      value[0] !== ' ' &&
+      value[value.length - 1] !== ' ' &&
+      value.length < 30
+    )
+      return true
+    else return false
   }
 
-  shakeError = (event) => {
-    event.target.classList.add('error-shake')
+  verifyPlayerNumber = (value) => {
+    return (value > 0 && value <= 12) || value === ''
+  }
+
+  shakeError = (target) => {
+    target.classList.add('error-shake')
     setTimeout(() => {
-      event.target.classList.remove('error-shake')
+      target.classList.remove('error-shake')
     }, 250)
+  }
+
+  redError = (target) => {
+    target.classList.add('red-error')
+    setTimeout(() => {
+      target.classList.remove('red-error')
+    }, 250)
+  }
+
+  allError = (target) => {
+    this.shakeError(target)
+    this.redError(target)
   }
 
   render() {
@@ -97,7 +128,8 @@ export default class CreateRoom extends react.Component {
       outFlag,
       inFlag,
       hideFlag,
-      showPassword
+      showPassword,
+      maxPlayers
     } = this.state
     return (
       <div className="joinCreateRoom-container createRoom">
@@ -114,11 +146,12 @@ export default class CreateRoom extends react.Component {
               type="text"
               placeholder="Room Name"
               value={roomName}
+              ref={this.roomNameRef}
               onChange={(e) => {
                 e.preventDefault()
-                if (this.verifyInput(e.target.value))
+                if (this.verifyName(e.target.value))
                   this.setState({ roomName: e.target.value })
-                else this.shakeError(e)
+                else this.shakeError(e.target)
               }}
             />
             <div className="checkbox-private">
@@ -140,11 +173,12 @@ export default class CreateRoom extends react.Component {
                 type={showPassword ? 'text' : 'password'}
                 placeholder="Password"
                 value={password}
+                ref={this.passwordRef}
                 onChange={(e) => {
                   e.preventDefault()
-                  if (this.verifyInput(e.target.value))
+                  if (this.verifyName(e.target.value))
                     this.setState({ password: e.target.value })
-                  else this.shakeError(e)
+                  else this.shakeError(e.target)
                 }}
               />
               <i
@@ -154,17 +188,54 @@ export default class CreateRoom extends react.Component {
                 }}
               ></i>
             </div>
+            <div className="maxplayers-container">
+              <label htmlFor="maxplayer-input">Max players : </label>
+              <input
+                type="number"
+                id="maxplayers-input"
+                value={maxPlayers}
+                ref={this.maxPlayersRef}
+                onChange={(e) => {
+                  e.preventDefault()
+                  if (this.verifyPlayerNumber(e.target.value))
+                    this.setState({ maxPlayers: e.target.value })
+                  else this.shakeError(e.target)
+                }}
+              />
+              <i
+                className="fas fa-caret-up spin-btn-up"
+                onClick={(e) => {
+                  const maxPlayers = this.maxPlayersRef.current.value
+                  if (maxPlayers < 12)
+                    this.setState({ maxPlayers: parseInt(maxPlayers) + 1 })
+                }}
+              />
+              <i
+                className="fas fa-caret-down spin-btn-down"
+                onClick={(e) => {
+                  const maxPlayers = this.maxPlayersRef.current.value
+                  if (maxPlayers > 2)
+                    this.setState({ maxPlayers: parseInt(maxPlayers) - 1 })
+                }}
+              />
+            </div>
             <button
               onClick={(e) => {
                 e.preventDefault()
-                if (
-                  roomName.length > 0 &&
-                  (!privateRoom || (privateRoom && password && password.length > 0))
-                )
-                  this.outRoomScreen()
+                if (!this.verifyName(roomName) || roomName.length < 2)
+                  this.allError(this.roomNameRef.current)
+                else if (!this.verifyPlayerNumber(maxPlayers) || maxPlayers < 2)
+                  this.allError(this.maxPlayersRef.current)
+                else if (privateRoom && !this.verifyName(password))
+                  this.allError(this.passwordRef.current)
+                else if (privateRoom && password.length < 4)
+                  this.allError(this.passwordRef.current)
+                else if (privateRoom && password.length > 30)
+                  this.allError(this.passwordRef.current)
+                else this.outRoomScreen()
               }}
             >
-              Ok
+              Ok <i className="fas fa-angle-right"></i>
             </button>
           </form>
         ) : null}
@@ -181,15 +252,18 @@ export default class CreateRoom extends react.Component {
               placeholder="Name"
               autoFocus
               value={userName}
+              ref={this.userNameRef}
               onChange={(e) => {
-                if (this.verifyInput(e.target.value))
+                if (this.verifyName(e.target.value))
                   this.setState({ userName: e.target.value })
               }}
             />
             <button
               onClick={(e) => {
                 e.preventDefault()
-                if (userName.length > 0) this.handleSubmit()
+                if (!this.verifyName(userName) || userName.length < 2)
+                  this.allError(this.userNameRef.current)
+                else this.outNameScreen()
               }}
             >
               Create

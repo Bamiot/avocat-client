@@ -15,9 +15,23 @@ iframe {
 }
 
 // global styles
+input[type='number'],
 input[type='password'],
 input[type='text'] {
-  @include input-text;
+  position: relative;
+  border-bottom: 1px solid #aaa;
+  color: $white;
+  transition: all 0.2s ease-in-out;
+  &:focus-visible {
+    border-color: #fff;
+  }
+}
+
+input[type='number'] {
+  width: 2.5rem;
+  height: 2rem;
+  text-align: center;
+  font-size: 1rem;
 }
 
 // scroll bar
