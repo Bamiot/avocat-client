@@ -18,7 +18,8 @@ export default class CreateRoom extends react.Component {
     roomScreen: true,
     nameScreen: false,
     outFlag: false,
-    inFlag: false
+    inFlag: false,
+    hideFlag: false
   }
 
   outRoomScreen = () => {
@@ -30,10 +31,19 @@ export default class CreateRoom extends react.Component {
   }
 
   inNameScreen = () => {
-    this.setState({ nameScreen: true, inFlag: true })
+    this.setState({ nameScreen: true, inFlag: false, hideFlag: true })
+    /*
+      il y a un bug si commence l'annimation au moment ou l'element apparait
+      donc 1ms de delay pour appliqué l'animation pour forcer le fait de la faire 
+      en 2 render (1 pour l'apparition et 1 pour l'animation),
+      comme on ne veux pas le voir sans le translate on le cache avec .hide
+    */
+    setTimeout(() => {
+      this.setState({ inFlag: true, hideFlag: false })
+    }, 1)
     setTimeout(() => {
       this.setState({ nameScreen: true, inFlag: false })
-    }, inOutStyleData.duration)
+    }, inOutStyleData.duration + 1)
   }
 
   outNameScreen = () => {
@@ -81,7 +91,8 @@ export default class CreateRoom extends react.Component {
       userName,
       outFlag,
       inFlag,
-      showPassword
+      showPassword,
+      hideFlag
     } = this.state
     return (
       <div className="joinCreateRoom-container">
@@ -138,7 +149,7 @@ export default class CreateRoom extends react.Component {
           <form
             className={`choiceName${inFlag ? ' right-in' : ''}${
               outFlag ? ' left-out' : ''
-            }`}
+            }${hideFlag ? ' hide' : ''}`}
             style={inOutStyle}
           >
             <span>Choose a name</span>

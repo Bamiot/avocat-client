@@ -5,12 +5,10 @@
   animation-duration: 0.5s;
   animation-fill-mode: both;
   animation-iteration-count: 1;
+  opacity: 1;
+  transform: translateX(0);
 }
 @keyframes left-out {
-  from {
-    opacity: 1;
-    transform: translateX(0);
-  }
   to {
     opacity: 0;
     transform: translateX(-120%);
@@ -24,12 +22,10 @@
   animation-duration: 0.5s;
   animation-fill-mode: both;
   animation-iteration-count: 1;
+  opacity: 0;
+  transform: translateX(120%);
 }
 @keyframes right-in {
-  from {
-    opacity: 0;
-    transform: translateX(120%);
-  }
   to {
     opacity: 1;
     transform: translateX(0);
@@ -42,12 +38,10 @@
   animation-duration: 0.5s;
   animation-fill-mode: both;
   animation-iteration-count: 1;
+  opacity: 0;
+  transform: translateY(120%);
 }
 @keyframes down-in {
-  from {
-    opacity: 0;
-    transform: translateY(120%);
-  }
   to {
     opacity: 1;
     transform: translateY(0);

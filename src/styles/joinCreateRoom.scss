@@ -4,6 +4,7 @@
 @import './components/annimations.scss';
 
 .joinCreateRoom-container {
+  position: relative;
   margin: 2rem;
   padding: 2rem;
   border-radius: 2rem;
@@ -29,8 +30,13 @@
   }
 }
 
-.joinCreateRoom {
+.joinCreateRoom,
+.choiceName {
   position: relative;
+  width: 100%;
+  height: 100%;
+}
+.joinCreateRoom {
   .checkbox-private {
     position: relative;
     label {
@@ -68,7 +74,6 @@
 }
 
 .choiceName {
-  position: relative;
   span {
     margin-bottom: 2rem;
   }

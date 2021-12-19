@@ -3,6 +3,7 @@
 @import './sass-utils/mixins.scss';
 @import './sass-utils/functions.scss';
 @import './sass-utils/normalize.scss';
+@import './sass-utils/class';
 
 // bug avec une iframe chelou
 iframe {
@@ -62,12 +63,4 @@ input[type='text'] {
 .room-container {
   display: flex;
   flex-direction: column;
-}
-
-// color class
-.text-red {
-  color: $red;
-}
-.text-green {
-  color: $green;
 }
