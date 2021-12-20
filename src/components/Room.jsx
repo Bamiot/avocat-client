@@ -13,7 +13,7 @@ class Room extends Component {
     })
   }
   ready = () => {
-    const { roomId, username } = this.state
+    const { roomId, username } = this.props
     axios
       .get(`/ready?room_id=${roomId}&user=${username}`)
       .then((res) => {
