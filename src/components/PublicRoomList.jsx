@@ -189,6 +189,7 @@ export default class publicRoomList extends react.Component {
         .get(`/rooms/join?room_id=${roomName}&username=${username}`)
         .then((res) => {
           console.log(res)
+          this.props.onJoin(res.data.roomId)
         })
         .catch((err) => {
           console.error(err)

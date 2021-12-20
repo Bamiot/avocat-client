@@ -86,7 +86,7 @@ export default class CreateRoom extends react.Component {
   }
 
   handleSubmit = () => {
-    const { roomName, password, username: userName, privateRoom, maxPlayers } = this.state
+    const { roomName, password, username, privateRoom, maxPlayers } = this.state
     if (
       roomName.length > 0 &&
       (!privateRoom || (privateRoom && password && password.length > 0))
@@ -94,12 +94,13 @@ export default class CreateRoom extends react.Component {
       this.outNameScreen()
       axios
         .get(
-          `/rooms/create?room_id=${roomName}&maxplayers=${maxPlayers}&username=${userName}${
+          `/rooms/create?room_id=${roomName}&maxplayers=${maxPlayers}&username=${username}${
             privateRoom ? `&password=${password}` : ''
           }`
         )
         .then((res) => {
           console.log(res)
+          this.props.onJoin(res.data.roomId, username)
         })
         .catch((err) => {
           console.error(err)
