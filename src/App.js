@@ -50,7 +50,7 @@ export default class App extends React.Component {
   }
 
   render = () => {
-    const { inFlag, outFlag, roomPage, joinPage } = this.state
+    const { inFlag, outFlag, roomPage, joinPage, roomId, username } = this.state
     return (
       <div className="App">
         {roomPage || joinPage ? null : <div className="loading-spinner" />}
@@ -68,7 +68,7 @@ export default class App extends React.Component {
             </div>
           </div>
         ) : null}
-        {roomPage ? <Room /> : null}
+        {roomPage ? <Room roomId={roomId} username={username} /> : null}
       </div>
     )
   }
