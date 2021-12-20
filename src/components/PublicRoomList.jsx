@@ -90,6 +90,14 @@ const placeholder = [
   }
 ]
 
+const inOutStyleData = {
+  duration: 500
+}
+
+const inOutStyle = {
+  animationDuration: `${inOutStyleData.duration}ms`
+}
+
 export default class publicRoomList extends react.Component {
   constructor(props) {
     super(props)
@@ -97,6 +105,7 @@ export default class publicRoomList extends react.Component {
       rooms: [],
       roomScreen: true,
       nameScreen: false,
+      errorScreen: false,
       inFlag: false,
       outFlag: false,
       username: '',
@@ -155,6 +164,21 @@ export default class publicRoomList extends react.Component {
     }, 500)
   }
 
+  inErrorScreen = (error) => {
+    this.setState({ errorScreen: error, inFlag: true })
+    setTimeout(() => {
+      this.setState({ errorScreen: error, inFlag: false })
+    }, inOutStyleData.duration)
+  }
+
+  outErrorScreen = () => {
+    this.setState({ outFlag: true })
+    setTimeout(() => {
+      this.setState({ errorScreen: false, outFlag: false })
+      this.inRoomScreen()
+    }, inOutStyleData.duration)
+  }
+
   handleSubmit = () => {
     const { roomName, username } = this.state
     console.log(roomName, username)
@@ -166,7 +190,11 @@ export default class publicRoomList extends react.Component {
         .then((res) => {
           console.log(res)
         })
-        .catch((err) => console.error(err))
+        .catch((err) => {
+          console.error(err)
+          console.error(err.response)
+          this.inErrorScreen(err.response.data.error)
+        })
     }
   }
 
@@ -209,7 +237,8 @@ export default class publicRoomList extends react.Component {
   }
 
   render() {
-    const { rooms, roomScreen, nameScreen, inFlag, outFlag, username } = this.state
+    const { rooms, roomScreen, nameScreen, errorScreen, inFlag, outFlag, username } =
+      this.state
     return (
       <div className="publicroom-container">
         <span>
@@ -223,7 +252,26 @@ export default class publicRoomList extends react.Component {
             }}
           />
         </span>
-        {(roomScreen && !nameScreen) || (nameScreen && !roomScreen) ? null : (
+        {errorScreen ? (
+          <div
+            className={`errorScreenPublic ${inFlag ? ' right-in' : ''}${
+              outFlag ? ' right-out' : ''
+            }`}
+          >
+            <i className="fas fa-times-circle"></i>
+            <span>{typeof errorScreen === 'string' ? errorScreen : ' '}</span>
+            <button
+              className="primary-button"
+              onClick={(e) => {
+                this.outErrorScreen()
+              }}
+            >
+              {' '}
+              Ok
+            </button>
+          </div>
+        ) : null}
+        {roomScreen || nameScreen || errorScreen ? null : (
           <div className="loading-spinner" />
         )}
         {roomScreen ? (
@@ -270,7 +318,7 @@ export default class publicRoomList extends react.Component {
           </div>
         ) : null}
         {nameScreen ? (
-          <div
+          <form
             className={`name-screen ${inFlag ? ' right-in' : ''}${
               outFlag ? ' right-out' : ''
             }`}
@@ -300,7 +348,7 @@ export default class publicRoomList extends react.Component {
             >
               Join
             </button>
-          </div>
+          </form>
         ) : null}
       </div>
     )

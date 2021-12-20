@@ -19,6 +19,7 @@ export default class CreateRoom extends react.Component {
       password: '',
       roomScreen: true,
       nameScreen: false,
+      errorScreen: false,
       outFlag: false
     }
     this.roomNameRef = react.createRef()
@@ -34,10 +35,31 @@ export default class CreateRoom extends react.Component {
     }, inOutStyleData.duration)
   }
 
+  inRoomScreen = () => {
+    this.setState({ roomScreen: true, inFlag: true })
+    setTimeout(() => {
+      this.setState({ roomScreen: true, inFlag: false })
+    }, inOutStyleData.duration)
+  }
+
+  inErrorScreen = (error) => {
+    this.setState({ errorScreen: error, inFlag: true })
+    setTimeout(() => {
+      this.setState({ errorScreen: error, inFlag: false })
+    }, inOutStyleData.duration)
+  }
+
+  outErrorScreen = () => {
+    this.setState({ outFlag: true })
+    setTimeout(() => {
+      this.setState({ errorScreen: false, outFlag: false })
+      this.inRoomScreen()
+    }, inOutStyleData.duration)
+  }
+
   handleSubmit = () => {
     const { roomName, password, userName } = this.state
     if (roomName.length > 0) {
-      this.outNameScreen()
       axios
         .get(
           `/rooms/join?room_id=${roomName}&username=${userName}${
@@ -47,7 +69,11 @@ export default class CreateRoom extends react.Component {
         .then((res) => {
           console.log(res)
         })
-        .catch((err) => console.error(err))
+        .catch((err) => {
+          console.error(err)
+          console.error(err.response)
+          this.inErrorScreen(err.response.data.error)
+        })
     }
   }
 
@@ -83,10 +109,37 @@ export default class CreateRoom extends react.Component {
   }
 
   render() {
-    const { roomName, password, roomScreen, userName, outFlag, showPassword } = this.state
+    const {
+      roomName,
+      password,
+      roomScreen,
+      userName,
+      outFlag,
+      inFlag,
+      showPassword,
+      errorScreen
+    } = this.state
     return (
       <div className="joinCreateRoom-container">
-        {roomScreen ? null : <div className="loading-spinner" />}
+        {roomScreen || errorScreen ? null : <div className="loading-spinner" />}
+        {errorScreen ? (
+          <div
+            className={`errorScreen ${inFlag ? ' right-in' : ''}${
+              outFlag ? ' right-out' : ''
+            }`}
+          >
+            <i className="fas fa-times-circle"></i>
+            <span>{typeof errorScreen === 'string' ? errorScreen : ' '}</span>
+            <button
+              className="primary-button"
+              onClick={(e) => {
+                this.outErrorScreen()
+              }}
+            >
+              <i className="fas fa-angle-left" /> Ok
+            </button>
+          </div>
+        ) : null}
         {roomScreen ? (
           <form
             className={`joinCreateRoom${outFlag ? ' left-out' : ''}`}
@@ -139,13 +192,19 @@ export default class CreateRoom extends react.Component {
             <button
               onClick={(e) => {
                 e.preventDefault()
-                if (!this.verifyInput(roomName) || roomName.length < 2)
+                if (!this.verifyInput(roomName) || roomName.length < 2) {
                   this.allError(this.roomNameRef.current)
-                else if (!this.verifyInput(password))
+                  return
+                }
+                if (!this.verifyInput(password)) {
                   this.allError(this.passwordRef.current)
-                else if (!this.verifyInput(userName) || userName.length < 2)
+                  return
+                }
+                if (!this.verifyInput(userName) || userName.length < 2) {
                   this.allError(this.userNameRef.current)
-                else this.outRoomScreen()
+                  return
+                }
+                this.outRoomScreen()
               }}
             >
               Join

@@ -125,6 +125,7 @@
   }
 }
 
+.errorScreenPublic,
 .name-screen {
   position: relative;
   margin-top: 4rem;
@@ -162,5 +163,25 @@
     @include button-primary;
     margin-top: 1rem;
     width: 100%;
+  }
+}
+
+.errorScreenPublic {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  margin-top: 1rem;
+  & > * {
+    margin-bottom: 1rem;
+  }
+  // font-size: 1.5rem;
+  // font-weight: bold;
+  span,
+  i {
+    color: $red;
+  }
+  i {
+    font-size: 3rem;
   }
 }

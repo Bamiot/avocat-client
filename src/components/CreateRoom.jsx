@@ -20,6 +20,7 @@ export default class CreateRoom extends react.Component {
       password: '',
       roomScreen: true,
       nameScreen: false,
+      errorScreen: false,
       outFlag: false,
       inFlag: false,
       hideFlag: false,
@@ -29,6 +30,13 @@ export default class CreateRoom extends react.Component {
     this.userNameRef = react.createRef()
     this.passwordRef = react.createRef()
     this.maxPlayersRef = react.createRef()
+  }
+
+  inRoomScreen = () => {
+    this.setState({ roomScreen: true, inFlag: true })
+    setTimeout(() => {
+      this.setState({ roomScreen: true, inFlag: false })
+    }, inOutStyleData.duration)
   }
 
   outRoomScreen = () => {
@@ -62,6 +70,21 @@ export default class CreateRoom extends react.Component {
     }, inOutStyleData.duration)
   }
 
+  inErrorScreen = (error) => {
+    this.setState({ errorScreen: error, inFlag: true })
+    setTimeout(() => {
+      this.setState({ errorScreen: error, inFlag: false })
+    }, inOutStyleData.duration)
+  }
+
+  outErrorScreen = () => {
+    this.setState({ outFlag: true })
+    setTimeout(() => {
+      this.setState({ errorScreen: false, outFlag: false })
+      this.inRoomScreen()
+    }, inOutStyleData.duration)
+  }
+
   handleSubmit = () => {
     const { roomName, password, username: userName, privateRoom, maxPlayers } = this.state
     if (
@@ -78,7 +101,11 @@ export default class CreateRoom extends react.Component {
         .then((res) => {
           console.log(res)
         })
-        .catch((err) => console.error(err))
+        .catch((err) => {
+          console.error(err)
+          console.error(err.response)
+          this.inErrorScreen(err.response.data.error)
+        })
     } else console.error('create room handle sumbit error')
   }
 
@@ -124,6 +151,7 @@ export default class CreateRoom extends react.Component {
       password,
       roomScreen,
       nameScreen,
+      errorScreen,
       username,
       outFlag,
       inFlag,
@@ -133,12 +161,32 @@ export default class CreateRoom extends react.Component {
     } = this.state
     return (
       <div className="joinCreateRoom-container createRoom">
-        {(roomScreen && !nameScreen) || (nameScreen && !roomScreen) ? null : (
+        {roomScreen || nameScreen || errorScreen ? null : (
           <div className="loading-spinner" />
         )}
-        {roomScreen && !nameScreen ? (
+        {errorScreen ? (
+          <div
+            className={`errorScreen ${inFlag ? ' right-in' : ''}${
+              outFlag ? ' right-out' : ''
+            }`}
+          >
+            <i className="fas fa-times-circle"></i>
+            <span>{typeof errorScreen === 'string' ? errorScreen : ' '}</span>
+            <button
+              className="primary-button"
+              onClick={(e) => {
+                this.outErrorScreen()
+              }}
+            >
+              <i className="fas fa-angle-left" /> Ok
+            </button>
+          </div>
+        ) : null}
+        {roomScreen ? (
           <form
-            className={`joinCreateRoom${outFlag ? ' left-out' : ''}`}
+            className={`joinCreateRoom${outFlag ? ' left-out' : ''}${
+              inFlag ? ' left-in' : ''
+            }`}
             style={inOutStyle}
           >
             <span>Create Room</span>
@@ -222,24 +270,33 @@ export default class CreateRoom extends react.Component {
             <button
               onClick={(e) => {
                 e.preventDefault()
-                if (!this.verifyName(roomName) || roomName.length < 2)
+                if (!this.verifyName(roomName) || roomName.length < 2) {
                   this.allError(this.roomNameRef.current)
-                else if (!this.verifyPlayerNumber(maxPlayers) || maxPlayers < 2)
+                  return
+                }
+                if (!this.verifyPlayerNumber(maxPlayers) || maxPlayers < 2) {
                   this.allError(this.maxPlayersRef.current)
-                else if (privateRoom && !this.verifyName(password))
+                }
+                if (privateRoom && !this.verifyName(password)) {
                   this.allError(this.passwordRef.current)
-                else if (privateRoom && password.length < 4)
+                  return
+                }
+                if (privateRoom && password.length < 4) {
                   this.allError(this.passwordRef.current)
-                else if (privateRoom && password.length > 30)
+                  return
+                }
+                if (privateRoom && password.length > 30) {
                   this.allError(this.passwordRef.current)
-                else this.outRoomScreen()
+                  return
+                }
+                this.outRoomScreen()
               }}
             >
               Ok <i className="fas fa-angle-right"></i>
             </button>
           </form>
         ) : null}
-        {nameScreen && !roomScreen ? (
+        {nameScreen ? (
           <form
             className={`choiceName${inFlag ? ' right-in' : ''}${
               outFlag ? ' left-out' : ''

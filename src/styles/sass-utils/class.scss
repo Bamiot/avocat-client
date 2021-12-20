@@ -9,3 +9,7 @@
 .hide {
   visibility: hidden;
 }
+
+.primary-button {
+  @include button-primary;
+}
