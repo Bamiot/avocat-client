@@ -100,7 +100,7 @@ export default class CreateRoom extends react.Component {
         )
         .then((res) => {
           console.log(res)
-          this.props.onJoin(res.data.roomId, username)
+          this.props.onJoin(roomName, username)
         })
         .catch((err) => {
           console.error(err)
