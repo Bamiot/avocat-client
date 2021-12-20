@@ -4,7 +4,10 @@ import axios from 'axios'
 const socket = io.connect('http://localhost:3002/', { transports: ['websocket'] })
 
 class Room extends Component {
-  state = {}
+  state = {
+    roomId: this.props.roomId,
+    username: this.props.username
+  }
   componentDidMount = () => {
     const { roomId, username } = this.state
     socket.emit('roomState', (roomId, username))
@@ -13,7 +16,7 @@ class Room extends Component {
     })
   }
   ready = () => {
-    const { roomId, username } = this.props
+    const { roomId, username } = this.state
     axios
       .get(`/ready?room_id=${roomId}&user=${username}`)
       .then((res) => {
