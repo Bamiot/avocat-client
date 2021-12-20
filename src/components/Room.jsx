@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import io from 'socket.io-client'
 import axios from 'axios'
-const socket = io.connect('http://localhost:4082/', { transports: ['websocket'] })
+const socket = io.connect('http://localhost:3002/', { transports: ['websocket'] })
 
 class Room extends Component {
   state = {}

@@ -42,8 +42,11 @@ export default class App extends React.Component {
     this.outJoinPage()
     this.setState({ roomId, username })
     setTimeout(() => {
-      this.setState({ roomPage: true })
-    }, inOutStyleData.duration)
+      this.setState({ roomPage: true, inFlag: true })
+      setTimeout(() => {
+        this.setState({ roomPage: true, inFlag: false })
+      }, inOutStyleData.duration)
+    }, 1)
   }
 
   render = () => {
