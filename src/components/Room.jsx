@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import io from 'socket.io-client'
 import axios from 'axios'
+import '../styles/room.scss'
 const socket = io.connect('http://localhost:3002/', { transports: ['websocket'] })
 
 class Room extends Component {
@@ -10,26 +11,62 @@ class Room extends Component {
   }
   componentDidMount = () => {
     const { roomId, username } = this.state
-    socket.emit('roomState', (roomId, username))
-    socket.on('roomState', (room) => {
+    console.log(username, roomId)
+    socket.emit('joinRoom', roomId, username)
+    socket.on('joinRoom', (room) => {
       this.setState({ roomState: room })
+    })
+    socket.on('roomState' , (roomId) =>{
+      console.log(roomId);
+      this.setState({ roomState: roomId })
+    })
+    socket.on('disconnect' , () =>{
+      console.log("deco");
     })
   }
   ready = () => {
     const { roomId, username } = this.state
     axios
-      .get(`/ready?room_id=${roomId}&user=${username}`)
+      .get(`/rooms/ready?roomId=${roomId}&username=${username}`)
       .then((res) => {
         if (!res.error) {
-          socket.emit('roomState', this.state.data.roomId)
+          socket.emit('joinRoom', roomId)
         }
       })
       .catch((err) => {
-        console.log(err)
+        console.log(err.response.data)
       })
   }
   render() {
-    return <div>{JSON.stringify(this.state)}</div>
+    const { username, ready } = this.state;
+    const { roomId, players } = this.state.roomState ? this.state.roomState : "";
+    console.log(this.state);
+    return (
+      <div className="room-container">
+        <label className="room-id-label">Room ID: {roomId}</label>
+        <ul className="players-list">
+          {this.state.roomState ? players.map((player) =>
+            player.username === username ? (
+              <li key={`${player.username}${player.isReady}`} className="client-name">
+                {player.username} {(player.isReady && player.isReady === true) ? "ready" : "not ready"}
+              </li>
+            ) : (
+              <li key={`${player.username}${player.isReady}`} className="player-name">
+                {player.username} {(player.isReady && player.isReady === true) ? "ready" : "not ready"}
+              </li>
+            )
+          ) : ""}
+        </ul>
+        <span
+          className="ready"
+          onClick={() => {
+            this.ready();
+          }}
+        >
+          {ready ? "Ready to play !" : "Press to play !"}
+        </span>
+      </div>
+    );
   }
 }
 
