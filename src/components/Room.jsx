@@ -12,13 +12,9 @@ class Room extends Component {
   componentDidMount = () => {
     const { roomId, username } = this.state
     console.log(username, roomId)
-    socket.emit('joinRoom', roomId, username)
-    socket.on('joinRoom', (room) => {
+    socket.emit('avocat', roomId, username)
+    socket.on('avocat', (room) => {
       this.setState({ roomState: room })
-    })
-    socket.on('roomState' , (roomId) =>{
-      console.log(roomId);
-      this.setState({ roomState: roomId })
     })
     socket.on('disconnect' , () =>{
       console.log("deco");
@@ -30,7 +26,7 @@ class Room extends Component {
       .get(`/rooms/ready?roomId=${roomId}&username=${username}`)
       .then((res) => {
         if (!res.error) {
-          socket.emit('joinRoom', roomId)
+          socket.emit('avocat', roomId)
         }
       })
       .catch((err) => {
