@@ -13,9 +13,13 @@ const inOutStyle = {
 export default class CreateRoom extends react.Component {
   constructor(props) {
     super(props)
+
+    let username = ''
+    if (props.username) username = props.username
+
     this.state = {
       roomName: '',
-      username: '',
+      username: username,
       privateRoom: false,
       password: '',
       roomScreen: true,

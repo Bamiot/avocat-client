@@ -37,7 +37,7 @@ iframe {
   justify-content: center;
 }
 
-.room-page {
+.join-room-page {
   position: relative;
   top: 0;
   left: 0;
@@ -50,9 +50,23 @@ iframe {
   flex-direction: row;
   align-items: center;
   justify-content: center;
+  .create-join-container {
+    display: flex;
+    flex-direction: column;
+  }
 }
 
-.room-container {
+.game-page {
+  position: relative;
+  top: 0;
+  left: 0;
+  margin: 0;
+  padding: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
 }

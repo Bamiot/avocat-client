@@ -1,36 +1,29 @@
-.room-container {
-    background: #2f2e33;
-    margin: 0%;
-    width: 100vw;
-    height: 100vh;
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
-    -webkit-box-orient: vertical;
-    -webkit-box-direction: normal;
-        -ms-flex-direction: column;
-            flex-direction: column;
-    -webkit-box-align: start;
-        -ms-flex-align: start;
-            align-items: flex-start;
-  }
-  
+@import './sass-utils/variables.scss';
+@import './sass-utils/mixins.scss';
+
+.room-page-container {
+  @include container-box-shadow;
+  width: 12rem;
+  height: 15rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
   .room-id-label {
-    color: #acb8ff;
-    margin: 1em;
-    font-size: 1.4em;
+    @include title;
   }
-  
+
   .players-list {
     margin: 1em;
   }
-  
+
   .player-name {
     color: #c4c2c2;
   }
-  
+
   .client-name {
     font-style: oblique;
     color: #748cce;
   }
-  /*# sourceMappingURL=room.css.map */
+}
+/*# sourceMappingURL=room.css.map */

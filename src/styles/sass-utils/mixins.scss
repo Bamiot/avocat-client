@@ -14,3 +14,16 @@
     box-shadow: 0 0 1rem rgba(0, 0, 0, 0.5);
   }
 }
+
+@mixin container-box-shadow {
+  margin: 2rem;
+  padding: 2rem;
+  border-radius: 2rem;
+  box-shadow: 0 0 1rem rgba(0, 0, 0, 0.2);
+}
+
+@mixin title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: $primary-color;
+}

@@ -1,68 +1,74 @@
 import React, { Component } from 'react'
-import io from 'socket.io-client'
-import axios from 'axios'
+// import axios from 'axios'
 import '../styles/room.scss'
-const socket = io.connect('http://localhost:3002/', { transports: ['websocket'] })
+
+// import LocalStorage from '../utils/localStorage'
+import SocketHandle from '../utils/socketHandle'
 
 class Room extends Component {
-  state = {
-    roomId: this.props.roomId,
-    username: this.props.username
-  }
-  componentDidMount = () => {
-    const { roomId, username } = this.state
-    console.log(username, roomId)
-    socket.emit('avocat', roomId, username)
-    socket.on('avocat', (room) => {
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      username: props.username,
+      rooId: props.roomId,
+      roomPlayers: [],
+      roomState: {}
+    }
+
+    this.socket = new SocketHandle()
+
+    // did mount
+    // const { roomId, username } = props
+
+    this.socket.on('players', (players) => {
+      this.setState({ roomPlayers: players })
+    })
+
+    this.socket.on('avocat', (room) => {
       this.setState({ roomState: room })
     })
-    socket.on('disconnect' , () =>{
-      console.log("deco");
-    })
   }
+
   ready = () => {
     const { roomId, username } = this.state
-    axios
-      .get(`/rooms/ready?roomId=${roomId}&username=${username}`)
-      .then((res) => {
-        if (!res.error) {
-          socket.emit('avocat', roomId)
-        }
-      })
-      .catch((err) => {
-        console.log(err.response.data)
-      })
+    this.socket.emit('ready', { roomId, username })
   }
+
   render() {
-    const { username, ready } = this.state;
-    const { roomId, players } = this.state.roomState ? this.state.roomState : "";
-    console.log(this.state);
+    const { username, ready, roomPlayers } = this.state
+    const { roomId } = this.state.roomState
+    console.log(this.state)
     return (
-      <div className="room-container">
-        <label className="room-id-label">Room ID: {roomId}</label>
+      <div className="room-page-container">
+        <label className="room-id-label">{roomId}</label>
         <ul className="players-list">
-          {this.state.roomState ? players.map((player) =>
-            player.username === username ? (
-              <li key={`${player.username}${player.isReady}`} className="client-name">
-                {player.username} {(player.isReady && player.isReady === true) ? "ready" : "not ready"}
-              </li>
-            ) : (
-              <li key={`${player.username}${player.isReady}`} className="player-name">
-                {player.username} {(player.isReady && player.isReady === true) ? "ready" : "not ready"}
-              </li>
-            )
-          ) : ""}
+          {roomPlayers
+            ? roomPlayers.map((player) =>
+                player.username === username ? (
+                  <li key={`${player.username}${player.isReady}`} className="client-name">
+                    {player.username}{' '}
+                    {player.isReady && player.isReady === true ? 'ready' : 'not ready'}
+                  </li>
+                ) : (
+                  <li key={`${player.username}${player.isReady}`} className="player-name">
+                    {player.username}{' '}
+                    {player.isReady && player.isReady === true ? 'ready' : 'not ready'}
+                  </li>
+                )
+              )
+            : ''}
         </ul>
         <span
           className="ready"
           onClick={() => {
-            this.ready();
+            this.ready()
           }}
         >
-          {ready ? "Ready to play !" : "Press to play !"}
+          {ready ? 'Ready to play !' : 'Press to play !'}
         </span>
       </div>
-    );
+    )
   }
 }
 

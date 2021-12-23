@@ -2,11 +2,8 @@
 @import './sass-utils/mixins.scss';
 
 .joinCreateRoom-container {
+  @include container-box-shadow;
   position: relative;
-  margin: 2rem;
-  padding: 2rem;
-  border-radius: 2rem;
-  box-shadow: 0 0 1rem rgba(0, 0, 0, 0.2);
   width: 12rem;
   height: 16rem;
   overflow: hidden;
@@ -19,9 +16,7 @@
     width: 100%;
   }
   span {
-    font-size: 1.5rem;
-    font-weight: bold;
-    color: $primary-color;
+    @include title;
   }
   button {
     @include button-primary;

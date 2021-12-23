@@ -1,7 +1,7 @@
 import react from 'react'
 import axios from 'axios'
 import '../styles/publicRoomList.scss'
-
+// eslint-disable-next-line
 const placeholder = [
   {
     id: 'Johnny',
@@ -93,7 +93,7 @@ const placeholder = [
 const inOutStyleData = {
   duration: 500
 }
-
+// eslint-disable-next-line
 const inOutStyle = {
   animationDuration: `${inOutStyleData.duration}ms`
 }
@@ -101,6 +101,10 @@ const inOutStyle = {
 export default class publicRoomList extends react.Component {
   constructor(props) {
     super(props)
+
+    let username = ''
+    if (props.username) username = props.username
+
     this.state = {
       rooms: [],
       roomScreen: true,
@@ -108,7 +112,7 @@ export default class publicRoomList extends react.Component {
       errorScreen: false,
       inFlag: false,
       outFlag: false,
-      username: '',
+      username: username,
       intervalHandle: null
     }
     this.userNameRef = react.createRef()
@@ -129,7 +133,7 @@ export default class publicRoomList extends react.Component {
     axios
       .get(`/rooms/publicRooms`)
       .then((res) => {
-        console.log(res)
+        // console.log(res)
         this.setState({ rooms: res.data.rooms })
       })
       .catch((err) => console.log(err))
