@@ -11,38 +11,49 @@ class Room extends Component {
 
     this.state = {
       username: props.username,
-      rooId: props.roomId,
+      roomId: props.roomId,
       roomPlayers: [],
       roomState: {}
     }
-
     this.socket = new SocketHandle()
 
-    // did mount
-    // const { roomId, username } = props
+    this.socket.emit('ready', {
+      roomId: this.state.roomId,
+      username: this.state.username,
+      ready: false
+    })
 
+    this.setSocketListeners()
+  }
+
+  setSocketListeners() {
     this.socket.on('players', (players) => {
       this.setState({ roomPlayers: players })
     })
-
-    this.socket.on('avocat', (room) => {
+    this.socket.on('room', (room) => {
       this.setState({ roomState: room })
     })
   }
 
   ready = () => {
     const { roomId, username } = this.state
-    this.socket.emit('ready', { roomId, username })
+    this.socket.emit('ready', { roomId, username, ready: 'toogle' })
   }
 
   render() {
-    const { username, ready, roomPlayers } = this.state
-    const { roomId } = this.state.roomState
-    console.log(this.state)
+    const { username, ready, roomPlayers, roomId } = this.state
+    // const {  } = this.state.roomState
     return (
       <div className="room-page-container">
+        <span
+          onClick={() => {
+            this.socket.emit('leave', { roomId, username })
+          }}
+        >
+          X
+        </span>
         <label className="room-id-label">{roomId}</label>
-        <ul className="players-list">
+        <ul className="players-list" key={JSON.stringify(this.state)}>
           {roomPlayers
             ? roomPlayers.map((player) =>
                 player.username === username ? (

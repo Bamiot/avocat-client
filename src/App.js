@@ -27,43 +27,54 @@ export default class App extends React.Component {
     this.roomIdLS = new LocalStorage('room-id')
     this.socketIdLS = new LocalStorage('socket-id')
 
+    // keep username
     const username = this.usernameLS.get()
     if (username) console.log('Saved username:', username)
-
-    this.state = {
-      inFlag: false,
-      outFlag: false,
-      roomPage: false,
-      joinPage: false,
-      username: username && username.length > 1 ? username : undefined
-    }
-
-    // socket listener
-    this.socket.on('error', (err) => {
-      console.error(err)
-    })
-    this.socket.on('disconnect', (reason) => {
-      this.roomIdLS.remove()
-      this.socketIdLS.remove()
-      alert(reason)
-      this.outRoomPage()
-    })
-    this.socket.on('join', (socketId) => {
-      this.socketIdLS.set(socketId)
-      this.outJoinPage()
-    })
 
     // reconnect
     const roomId = this.roomIdLS.get()
     const socketId = this.socketIdLS.get()
+    this.reconnect = roomId && socketId
+    if (this.reconnect) this.socket.emit('reconnect', { roomId, username, socketId })
 
-    if (roomId && socketId) {
-      this.setState({ roomId, username })
-      // this.socket.emit('reconnect', { roomId, username, socketId })
-      // this.inRoomPage()
-    } else {
-      this.inJoinPage()
+    this.state = {
+      inFlag: !this.reconnect,
+      outFlag: false,
+      roomPage: false,
+      joinPage: !this.reconnect,
+      roomId: roomId,
+      username: username && username.length > 1 ? username : undefined
     }
+
+    // socket listeners
+    this.socket.on('error', ({ type, error }) => {
+      console.error('socket error: ', type, error)
+      switch (type) {
+        case 'join':
+        case 'reconnect':
+        case 'disconnect':
+        case 'leave':
+        default:
+          break
+      }
+    })
+    this.socket.on('disconnect', (reason) => {
+      this.roomIdLS.remove()
+      this.socketIdLS.remove()
+      console.error('disconnected for ', reason)
+      this.outRoomPage()
+    })
+    this.socket.on('leave', () => {
+      this.roomIdLS.remove()
+      this.socketIdLS.remove()
+      console.log('leave room')
+      this.outRoomPage()
+    })
+    this.socket.on('join', (socketId) => {
+      this.socketIdLS.set(socketId)
+      console.log('save new socketid:', socketId)
+      setTimeout(this.inRoomPage, inOutStyleData.duration)
+    })
   }
 
   inJoinPage = () => {
@@ -74,10 +85,9 @@ export default class App extends React.Component {
   }
 
   outJoinPage = () => {
-    this.setState({ outFlag: true })
+    this.setState({ outFlag: true, inFlag: false })
     setTimeout(() => {
       this.setState({ joinPage: false, outFlag: false })
-      this.inRoomPage()
     }, inOutStyleData.duration)
   }
 
@@ -89,7 +99,7 @@ export default class App extends React.Component {
   }
 
   outRoomPage = () => {
-    this.setState({ outFlag: true })
+    this.setState({ outFlag: true, inFlag: false })
     setTimeout(() => {
       this.inJoinPage()
       this.setState({ roomPage: false, outFlag: false })
@@ -111,14 +121,14 @@ export default class App extends React.Component {
         {roomPage || joinPage ? null : <div className="loading-spinner" />}
         {joinPage ? (
           <div
-            className={`join-room-page ${inFlag ? 'left-in' : ''}${
+            className={`join-room-page ${inFlag && !outFlag ? 'left-in' : ''}${
               outFlag ? 'right-out' : ''
             }`}
             style={inOutStyle}
           >
             <PublicRoomList username={username} onJoin={this.joinRoom} />
             <div
-              className={`create-join-container ${inFlag ? 'left-in' : ''}`}
+              className={`create-join-container ${inFlag && !outFlag ? 'left-in' : ''}`}
               style={inOutStyle}
             >
               <CreateRoom username={username} onJoin={this.joinRoom} />
@@ -126,7 +136,7 @@ export default class App extends React.Component {
             </div>
           </div>
         ) : null}
-        {roomPage ? (
+        {roomPage && !joinPage ? (
           <div
             className={`game-page ${inFlag ? 'left-in' : ''}${
               outFlag ? 'right-out' : ''
