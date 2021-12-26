@@ -3,27 +3,111 @@
 
 .room-page-container {
   @include container-box-shadow;
-  width: 12rem;
-  height: 15rem;
+  position: relative;
+  max-width: calc(100% - 8rem);
+  width: 24rem;
+  height: calc(100% - 8rem);
+  min-width: fit-content;
   display: flex;
   flex-direction: column;
-  align-items: center;
 
-  .room-id-label {
+  .return-btn {
+    position: absolute;
+    top: 2rem;
+    left: 2rem;
+    font-size: 2rem;
+    &:hover {
+      color: $red;
+    }
+  }
+
+  .room-id {
     @include title;
+    font-size: 2rem;
+    margin: 1rem auto;
   }
 
-  .players-list {
-    margin: 1em;
+  .room-ready-btn {
+    @include button-primary;
+    transition: all 0.2s ease-in-out;
+    width: 12rem;
+    white-space: nowrap;
+    margin: 1rem auto;
+    margin-top: auto;
+    display: inline-flex;
+    i {
+      margin-left: auto;
+    }
   }
 
-  .player-name {
-    color: #c4c2c2;
-  }
-
-  .client-name {
-    font-style: oblique;
-    color: #748cce;
+  .room-players {
+    margin: 0 auto;
+    width: 15rem;
+    li {
+      margin-bottom: 0.5rem;
+      padding: 1rem;
+      position: relative;
+      width: 100%;
+      display: inline-flex;
+      font-size: 1.25rem;
+      .player-name {
+        &.client-name {
+          font-style: italic;
+          color: $primary-color;
+        }
+      }
+      i.player-ready {
+        margin-right: 0.33rem;
+      }
+      .player-ready {
+        margin-left: auto;
+      }
+      .player-owner {
+        position: absolute;
+        top: 0.5rem;
+        left: -2rem;
+        color: $gold;
+      }
+      @include bottom-line;
+      &:last-of-type::after {
+        content: none;
+      }
+    }
   }
 }
+
+.waiting-dots {
+  display: inline-flex;
+  align-items: center;
+  position: relative;
+  *[class^='dot'] {
+    display: block;
+    width: 0.33rem;
+    height: 0.33rem;
+    border-radius: 50%;
+    background-color: $white;
+    margin: 0 0.15rem;
+  }
+  .dot-1 {
+    animation: dot-animation 1s infinite;
+  }
+  .dot-2 {
+    animation: dot-animation 1s 0.2s infinite;
+  }
+  .dot-3 {
+    animation: dot-animation 1s 0.4s infinite;
+  }
+  @keyframes dot-animation {
+    0% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.5);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
+}
+
 /*# sourceMappingURL=room.css.map */

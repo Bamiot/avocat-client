@@ -4,7 +4,7 @@
   width: 100%;
   height: 100%;
   z-index: 1;
-  //animation: spinner-out 0s linear 3s 1 both;
+  animation: spinner-in 1s ease-in 0s 1 both;
   &::after {
     content: ' ';
     display: block;
@@ -26,8 +26,8 @@
     transform: rotate(360deg);
   }
 }
-@keyframes spinner-out {
+@keyframes spinner-in {
   to {
-    visibility: hidden;
+    opacity: 1;
   }
 }

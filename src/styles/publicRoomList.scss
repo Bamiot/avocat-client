@@ -76,17 +76,7 @@
       transform: rotate(0deg);
     }
   }
-  &::after {
-    content: ' ';
-    display: block;
-    width: 80%;
-    margin-left: 10%;
-    height: 1px;
-    background-color: $light-grey;
-    position: absolute;
-    bottom: -0.25rem;
-    left: 0;
-  }
+  @include bottom-line;
   p:first-of-type {
     overflow: hidden;
     text-overflow: ellipsis;
@@ -140,17 +130,7 @@
       color: $primary-color;
     }
   }
-  &.right-out {
-    .return-btn {
-      animation: return-out 0.2s ease-in-out both;
-    }
-    @keyframes return-out {
-      to {
-        transform: translateX(-500%);
-        opacity: 0;
-      }
-    }
-  }
+
   span {
     font-size: 1.5rem;
   }

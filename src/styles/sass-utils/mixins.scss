@@ -27,3 +27,17 @@
   font-weight: bold;
   color: $primary-color;
 }
+
+@mixin bottom-line {
+  &::after {
+    content: ' ';
+    display: block;
+    width: 80%;
+    margin-left: 10%;
+    height: 1px;
+    background-color: $light-grey;
+    position: absolute;
+    bottom: -0.25rem;
+    left: 0;
+  }
+}

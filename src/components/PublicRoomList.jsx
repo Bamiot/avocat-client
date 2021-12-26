@@ -279,7 +279,7 @@ export default class publicRoomList extends react.Component {
         {roomScreen || nameScreen || errorScreen ? null : (
           <div className="loading-spinner" />
         )}
-        {roomScreen ? (
+        {roomScreen && !errorScreen ? (
           <div
             className={`scroll-view-wrapper ${outFlag ? ' left-out' : ''}${
               inFlag ? ' left-in' : ''
@@ -322,7 +322,7 @@ export default class publicRoomList extends react.Component {
             )}
           </div>
         ) : null}
-        {nameScreen ? (
+        {nameScreen && !errorScreen ? (
           <form
             className={`name-screen ${inFlag ? ' right-in' : ''}${
               outFlag ? ' right-out' : ''

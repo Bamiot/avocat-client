@@ -1,0 +1,22 @@
+@import '../sass-utils/variables.scss';
+@import '../sass-utils/mixins.scss';
+
+.return-btn {
+  font-size: 1.5rem;
+  color: $white;
+  &:hover {
+    color: $primary-color;
+  }
+}
+
+*[class$='-out'] {
+  .return-btn {
+    animation: return-btn-out 0.2s ease-in-out both;
+  }
+  @keyframes return-btn-out {
+    to {
+      transform: translateX(-500%);
+      opacity: 0;
+    }
+  }
+}

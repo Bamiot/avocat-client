@@ -1,8 +1,6 @@
 import React, { Component } from 'react'
-// import axios from 'axios'
 import '../styles/room.scss'
 
-// import LocalStorage from '../utils/localStorage'
 import SocketHandle from '../utils/socketHandle'
 
 class Room extends Component {
@@ -40,44 +38,56 @@ class Room extends Component {
     this.socket.emit('ready', { roomId, username, ready: 'toogle' })
   }
 
+  leaveRoom = () => {
+    const { roomId, username } = this.state
+    this.socket.emit('leave', { roomId, username })
+  }
+
   render() {
-    const { username, ready, roomPlayers, roomId } = this.state
-    // const {  } = this.state.roomState
+    const { username, roomPlayers, roomState, roomId } = this.state
+    const client = roomPlayers.find((player) => player.username === username)
+
     return (
       <div className="room-page-container">
-        <span
-          onClick={() => {
-            this.socket.emit('leave', { roomId, username })
-          }}
-        >
-          X
-        </span>
-        <label className="room-id-label">{roomId}</label>
-        <ul className="players-list" key={JSON.stringify(this.state)}>
+        <i className="fas fa-times return-btn" onClick={this.leaveRoom} />
+        <span className="room-id">{roomId}</span>
+        <ul className="room-players">
           {roomPlayers
-            ? roomPlayers.map((player) =>
-                player.username === username ? (
-                  <li key={`${player.username}${player.isReady}`} className="client-name">
-                    {player.username}{' '}
-                    {player.isReady && player.isReady === true ? 'ready' : 'not ready'}
-                  </li>
-                ) : (
-                  <li key={`${player.username}${player.isReady}`} className="player-name">
-                    {player.username}{' '}
-                    {player.isReady && player.isReady === true ? 'ready' : 'not ready'}
-                  </li>
-                )
-              )
-            : ''}
+            ? roomPlayers.map((player, index) => (
+                <li key={index}>
+                  <span
+                    className={`player-name ${
+                      username === player.username ? 'client-name' : ''
+                    }`}
+                  >
+                    {player.username}
+                  </span>
+                  {player.isReady ? (
+                    <i className="fas fa-check player-ready text-green" />
+                  ) : (
+                    <span className="waiting-dots player-ready">
+                      <span className="dot-1" />
+                      <span className="dot-2" />
+                      <span className="dot-3" />
+                    </span>
+                  )}
+                  {player.username === roomState.owner ? (
+                    <i className="fas fa-crown player-owner" />
+                  ) : null}
+                </li>
+              ))
+            : null}
         </ul>
-        <span
-          className="ready"
-          onClick={() => {
-            this.ready()
-          }}
-        >
-          {ready ? 'Ready to play !' : 'Press to play !'}
-        </span>
+        {client ? (
+          <button className={`room-ready-btn`} onClick={this.ready}>
+            {client.isReady ? 'Not ready !' : 'Ready !'}
+            <i
+              className={`fas fa-${
+                !client.isReady ? 'check text-green' : 'times text-red'
+              }`}
+            />
+          </button>
+        ) : null}
       </div>
     )
   }
