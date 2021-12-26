@@ -74,6 +74,21 @@
         transform: translateX(0);
         opacity: 1;
       }
+      .fa-signal {
+        position: relative;
+        font-size: 0.8rem;
+        margin: 0.45rem;
+        &::after {
+          content: ' ';
+          display: block;
+          width: 120%;
+          height: 0.15rem;
+          background-color: $red;
+          position: absolute;
+          top: 50%;
+          transform: rotate(45deg);
+        }
+      }
       .player-kick {
         color: $red;
         transition: all 0.2s ease-in-out;
