@@ -81,9 +81,10 @@ class Room extends Component {
                     <i
                       className="fas fa-user-slash player-kick"
                       onClick={() => {
+                        console.log('kick', player.username)
                         this.socket.emit('kick', {
                           roomId,
-                          username: player.username
+                          kickedPlayerName: player.username
                         })
                       }}
                     />
