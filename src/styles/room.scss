@@ -27,6 +27,7 @@
     margin: 1rem auto;
   }
 
+  .room-start-btn,
   .room-ready-btn {
     @include button-primary;
     transition: all 0.2s ease-in-out;
@@ -38,6 +39,10 @@
     i {
       margin-left: auto;
     }
+  }
+  .room-start-btn {
+    background-color: $green;
+    color: $black;
   }
 
   .room-players {
@@ -56,18 +61,31 @@
           color: $primary-color;
         }
       }
-      i.player-ready {
-        margin-right: 0.33rem;
-      }
       .player-ready {
         margin-left: auto;
       }
+      .player-kick,
       .player-owner {
         position: absolute;
-        top: 0.5rem;
         left: -2rem;
         color: $gold;
       }
+      &:hover .player-kick {
+        transform: translateX(0);
+        opacity: 1;
+      }
+      .player-kick {
+        color: $red;
+        transition: all 0.2s ease-in-out;
+        transform: translateX(3rem);
+        opacity: 0;
+        width: 3rem;
+        height: 1.5rem;
+        &:hover {
+          cursor: pointer;
+        }
+      }
+
       @include bottom-line;
       &:last-of-type::after {
         content: none;
@@ -80,6 +98,7 @@
   display: inline-flex;
   align-items: center;
   position: relative;
+  left: 0.25rem;
   *[class^='dot'] {
     display: block;
     width: 0.33rem;

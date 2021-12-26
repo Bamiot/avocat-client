@@ -62,6 +62,7 @@ class Room extends Component {
                   >
                     {player.username}
                   </span>
+                  {/* ready indicator  */}
                   {player.isReady ? (
                     <i className="fas fa-check player-ready text-green" />
                   ) : (
@@ -71,14 +72,28 @@ class Room extends Component {
                       <span className="dot-3" />
                     </span>
                   )}
+                  {/* owner indicator */}
                   {player.username === roomState.owner ? (
                     <i className="fas fa-crown player-owner" />
+                  ) : null}
+                  {/* kick button */}
+                  {roomState.owner === username && player.username !== roomState.owner ? (
+                    <i
+                      className="fas fa-user-slash player-kick"
+                      onClick={() => {
+                        this.socket.emit('kick', {
+                          roomId,
+                          username: player.username
+                        })
+                      }}
+                    />
                   ) : null}
                 </li>
               ))
             : null}
         </ul>
-        {client ? (
+        {/* Ready Button */}
+        {client && (!client.isReady || client.username !== roomState.owner) ? (
           <button className={`room-ready-btn`} onClick={this.ready}>
             {client.isReady ? 'Not ready !' : 'Ready !'}
             <i
@@ -86,6 +101,13 @@ class Room extends Component {
                 !client.isReady ? 'check text-green' : 'times text-red'
               }`}
             />
+          </button>
+        ) : null}
+        {/* Start Button */}
+        {client && client.username === roomState.owner && client.isReady ? (
+          <button className={`room-start-btn`} onClick={this.ready}>
+            {'Start !'}
+            <i className={`fas fa-angle-right`} />
           </button>
         ) : null}
       </div>
