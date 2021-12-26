@@ -62,7 +62,7 @@ class Room extends Component {
                   >
                     {player.username}
                   </span>
-                  {player.online ? null : <i className="fas fa-signal" />}
+                  {player.online ? null : <i className="fas fa-signal signal-slash" />}
                   {/* ready indicator  */}
                   {player.isReady ? (
                     <i className="fas fa-check player-ready text-green" />
