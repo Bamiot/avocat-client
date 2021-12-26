@@ -1,0 +1,12 @@
+@import '../sass-utils/variables.scss';
+@import '../sass-utils/mixins.scss';
+
+.game-container {
+  @include container-box-shadow;
+  width: calc(100% - 12rem);
+  height: calc(100% - 12rem);
+
+  & > * {
+    height: 15rem;
+  }
+}

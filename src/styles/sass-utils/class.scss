@@ -6,8 +6,11 @@
   color: $green !important;
 }
 
+.hide::after,
+.hide::before,
 .hide {
   visibility: hidden;
+  opacity: 0;
 }
 
 .primary-button {
