@@ -31,7 +31,7 @@ class Card extends React.Component {
     const imageLink = prelinkCards + id + '.png'
     return (
       <img
-        className="card-img"
+        className={`card-img ${this.props.className}`}
         src={reveal ? imageLink : backLink}
         alt="card"
         onClick={() => {

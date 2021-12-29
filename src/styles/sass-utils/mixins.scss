@@ -15,6 +15,23 @@
   }
 }
 
+@mixin button($color: $primary-color) {
+  background: $color;
+  color: #fff;
+  border: none;
+  border-radius: 2rem;
+  padding: 1rem 2rem;
+  font-size: 1.2rem;
+  font-weight: bold;
+  text-shadow: 0 0 1rem rgba(0, 0, 0, 0.6);
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  &:hover {
+    filter: brightness(1.1);
+    box-shadow: 0 0 1rem rgba(0, 0, 0, 0.5);
+  }
+}
+
 @mixin container-box-shadow {
   margin: 2rem;
   padding: 2rem;

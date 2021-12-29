@@ -12,7 +12,7 @@ class Room extends Component {
       username: props.username,
       roomId: props.roomId,
       roomPlayers: [],
-      roomState: {},
+      room: {},
       inGame: false
     }
     this.socket = new SocketHandle()
@@ -31,7 +31,8 @@ class Room extends Component {
       this.setState({ roomPlayers: players })
     })
     this.socket.on('room', (room) => {
-      this.setState({ roomState: room })
+      this.setState({ room })
+      if (room.inGame) this.setState({ inGame: true })
     })
   }
 
@@ -45,8 +46,13 @@ class Room extends Component {
     this.socket.emit('leave', { roomId, username })
   }
 
+  startGame = () => {
+    const { roomId, username } = this.state
+    this.socket.emit('start', { roomId, username })
+  }
+
   render() {
-    const { username, roomPlayers, roomState, roomId, inGame } = this.state
+    const { username, roomPlayers, room, roomId, inGame } = this.state
     const client = roomPlayers.find((player) => player.username === username)
 
     return (
@@ -81,12 +87,11 @@ class Room extends Component {
                       </span>
                     )}
                     {/* owner indicator */}
-                    {player.username === roomState.owner ? (
+                    {player.username === room.owner ? (
                       <i className="fas fa-crown player-owner" />
                     ) : null}
                     {/* kick button */}
-                    {roomState.owner === username &&
-                    player.username !== roomState.owner ? (
+                    {room.owner === username && player.username !== room.owner ? (
                       <i
                         className="fas fa-user-slash player-kick"
                         onClick={() => {
@@ -103,7 +108,7 @@ class Room extends Component {
               : null}
           </ul>
           {/* Ready Button */}
-          {client && (!client.isReady || client.username !== roomState.owner) ? (
+          {client && (!client.isReady || client.username !== room.owner) ? (
             <button className={`room-ready-btn`} onClick={this.ready}>
               {client.isReady ? 'Not ready !' : 'Ready !'}
               <i
@@ -114,14 +119,16 @@ class Room extends Component {
             </button>
           ) : null}
           {/* Start Button */}
-          {client && client.username === roomState.owner && client.isReady ? (
-            <button className={`room-start-btn`} onClick={this.ready}>
+          {client && client.username === room.owner && client.isReady && !inGame ? (
+            <button className={`room-start-btn`} onClick={this.startGame}>
               {'Start !'}
               <i className={`fas fa-angle-right`} />
             </button>
           ) : null}
         </div>
-        {inGame ? <Game gameState={roomState} /> : null}
+        {inGame && room && room.gameState ? (
+          <Game gameState={room.gameState} username={username} />
+        ) : null}
       </div>
     )
   }
