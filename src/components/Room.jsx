@@ -108,7 +108,7 @@ class Room extends Component {
               : null}
           </ul>
           {/* Ready Button */}
-          {client && (!client.isReady || client.username !== room.owner) ? (
+          {client && (!client.isReady || client.username !== room.owner) && !inGame ? (
             <button className={`room-ready-btn`} onClick={this.ready}>
               {client.isReady ? 'Not ready !' : 'Ready !'}
               <i

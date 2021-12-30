@@ -39,41 +39,52 @@
     height: 100%;
   }
 
-  // .player {
-  //   position: absolute;
-  //   top: 50%;
-  //   left: 50%;
-  //   --rot: calc(var(--p) * 1turn / var(--n));
-  //   transform: rotate(var(--rot)) translate(80%) rotate(calc(-1 * var(--rot)));
-  //   .player-name {
-  //   }
-  //   .player-hand {
-  //     display: none;
-  //   }
-  //   .player-cards {
-  //     .card {
-  //       width: 4rem;
-  //     }
-  //   }
-  // }
+  .player {
+    position: absolute;
+    top: calc(50% - 3rem);
+    left: calc(50% - 7.5rem);
+    --rot: calc(var(--p) * 1turn / var(--pc));
+    --hyp-x: 32vw;
+    --hyp-y: 33vh;
+    transform: translate(
+        calc(var(--tx) * -1 * var(--hyp-x)),
+        calc(var(--ty) * var(--hyp-y))
+      )
+      rotate(var(--rot)) rotate(calc(-1 * var(--rot)));
+    // autre methode pour placer en cercle
+    // transform: rotate(var(--rot)) translate(10%, 190%); // rotate(calc(-1 * var(--rot)));
+    .player-name {
+      // transform: rotate(calc(-1 * var(--rot)));
+    }
+    .player-hand {
+      display: none;
+    }
+    .player-cards {
+      .card {
+        width: 4rem;
+      }
+    }
+  }
 
-  // .main-player {
-  //   position: absolute;
-  //   bottom: 2rem;
-  //   left: calc(50% - 9rem);
-  //   .player-hand {
-  //     position: absolute;
-  //     bottom: 3rem;
-  //     right: -9rem;
-  //     .card {
-  //       width: 8rem;
-  //     }
-  //   }
-  //   .player-name {
-  //     display: none;
-  //   }
-  //   .player-cards .card {
-  //     width: 4.5rem;
-  //   }
-  // }
+  .main-player {
+    position: absolute;
+    top: auto;
+    bottom: 2rem;
+    left: calc(50% - 9rem);
+    transform: none;
+    .player-hand {
+      position: absolute;
+      bottom: 3rem;
+      right: -9rem;
+      .card {
+        width: 8rem;
+      }
+    }
+    .player-name {
+      display: none;
+    }
+    .player-cards .card {
+      width: 4.5rem;
+    }
+  }
 }

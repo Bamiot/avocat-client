@@ -23,7 +23,8 @@ export default class Game extends React.Component {
   cardClick(id, changeReveal, positionPath) {
     switch (positionPath) {
       case 'deck':
-        //
+        // if il a le droit de pioché
+        // this.sendAction({})
         break
       case 'pit':
         //
@@ -45,7 +46,14 @@ export default class Game extends React.Component {
   }
 
   render() {
-    const { action, pit, players } = this.state
+    const { action, pit } = this.state
+
+    let players = this.state.players.slice()
+    while (players[0].username !== this.state.username) {
+      let p = players.shift()
+      players.push(p)
+    }
+
     return (
       <div className="game-container right-in">
         <button className="avocat-button">Avocat !</button>
@@ -72,7 +80,15 @@ export default class Game extends React.Component {
           {players.map((player, i) => (
             <div
               key={i}
-              style={{ '--p': i }}
+              style={{
+                '--p': i,
+                '--ty': `${
+                  Math.round(Math.cos((i * 2 * Math.PI) / players.length) * 100) / 100
+                }`,
+                '--tx': `${
+                  Math.round(Math.sin((i * 2 * Math.PI) / players.length) * 100) / 100
+                }`
+              }}
               className={`player player-${i} ${
                 player.username === this.state.username ? 'main-player' : 'other-player'
               }`}
