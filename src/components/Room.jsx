@@ -54,7 +54,7 @@ class Room extends Component {
   render() {
     const { username, roomPlayers, room, roomId, inGame } = this.state
     const client = roomPlayers.find((player) => player.username === username)
-
+    console.log(room.owner);
     return (
       <div className="room-page-container">
         <div className={`room-hub ${inGame ? 'inGame' : ''}`}>
@@ -119,7 +119,7 @@ class Room extends Component {
             </button>
           ) : null}
           {/* Start Button */}
-          {client && client.username === room.owner && client.isReady && !inGame ? (
+          {client && client.username !== room.owner && client.isReady && !inGame ? (
             <button className={`room-start-btn`} onClick={this.startGame}>
               {'Start !'}
               <i className={`fas fa-angle-right`} />
@@ -129,6 +129,7 @@ class Room extends Component {
         {inGame && room && room.gameState ? (
           <Game gameState={room.gameState} username={username} />
         ) : null}
+    
       </div>
     )
   }
